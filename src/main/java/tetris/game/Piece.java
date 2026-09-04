@@ -2,6 +2,7 @@ package tetris.game;
 
 public class Piece {
 	byte rotation;
+	byte maxRotation;
 	byte currentRow, currentCol;
 	byte[][] gridShape;
 
@@ -34,6 +35,10 @@ public class Piece {
 			case 6  -> Shape.Z;
 			default -> Shape.T;
 		};
+		maxRotation = switch (shape) {
+			case BAR, S, Z -> 1;
+			default -> 3;
+		};
 		
 		switch (shape) {
 			case BOX -> gridShape = new byte[][] {
@@ -49,8 +54,8 @@ public class Piece {
 				{0, 0, 1, 0},
 			};
 			case T -> gridShape = new byte[][] {
-				{0, 1, 1, 1},
 				{0, 0, 1, 0},
+				{0, 1, 1, 1},
 				{0, 0, 0, 0},
 				{0, 0, 0, 0}
 			};
@@ -67,17 +72,154 @@ public class Piece {
 				{0, 0, 0, 0}
 			};
 			case S -> gridShape = new byte[][] {
-				{0, 0, 1, 1},
+				{0, 1, 0, 0},
 				{0, 1, 1, 0},
-				{0, 0, 0, 0},
+				{0, 0, 1, 0},
 				{0, 0, 0, 0}
 			};
 			case Z -> gridShape = new byte[][] {
-				{0, 1, 1, 0},
+				{0, 0, 0, 1},
 				{0, 0, 1, 1},
-				{0, 0, 0, 0},
+				{0, 0, 1, 0},
 				{0, 0, 0, 0}
 			};
+		}
+	}
+
+	public void rotate(boolean reverse) {
+		if (shape == Shape.BOX) return;
+
+		if (!reverse) ++rotation;
+		else --rotation;
+
+		if (rotation > maxRotation) rotation = 0;
+
+		if (shape == Shape.BAR) {
+			switch (rotation) {
+				case 0 -> gridShape = new byte[][] {
+					{0, 0, 1, 0},
+					{0, 0, 1, 0},
+					{0, 0, 1, 0},
+					{0, 0, 1, 0}
+				};
+				case 1 -> gridShape = new byte[][] {
+					{0, 0, 0, 0},
+					{0, 0, 0, 0},
+					{1, 1, 1, 1},
+					{0, 0, 0, 0}
+				};
+			}
+		} else if (shape == Shape.T) {
+			switch (rotation) {
+				case 0 -> gridShape = new byte[][] {
+					{0, 0, 1, 0},
+					{0, 1, 1, 1},
+					{0, 0, 0, 0},
+					{0, 0, 0, 0}
+				};
+				case 1 -> gridShape = new byte[][] {
+					{0, 0, 1, 0},
+					{0, 0, 1, 1},
+					{0, 0, 1, 0},
+					{0, 0, 0, 0}
+				};
+				case 2 -> gridShape = new byte[][] {
+					{0, 0, 0, 0},
+					{0, 1, 1, 1},
+					{0, 0, 1, 0},
+					{0, 0, 0, 0}
+				};
+				case 3 -> gridShape = new byte[][] {
+					{0, 0, 1, 0},
+					{0, 1, 1, 0},
+					{0, 0, 1, 0},
+					{0, 0, 0, 0}
+				};
+			}
+		} else if (shape == Shape.L) {
+			switch (rotation) {
+				case 0 -> gridShape = new byte[][] {
+					{0, 0, 1, 0},
+					{0, 0, 1, 0},
+					{0, 0, 1, 1},
+					{0, 0, 0, 0}
+				};
+				case 1 -> gridShape = new byte[][] {
+					{0, 0, 0, 0},
+					{0, 1, 1, 1},
+					{0, 1, 0, 0},
+					{0, 0, 0, 0}
+				};
+				case 2 -> gridShape = new byte[][] {
+					{0, 1, 1, 0},
+					{0, 0, 1, 0},
+					{0, 0, 1, 0},
+					{0, 0, 0, 0}
+				};
+				case 3 -> gridShape = new byte[][] {
+					{0, 0, 0, 1},
+					{0, 1, 1, 1},
+					{0, 0, 0, 0},
+					{0, 0, 0, 0}
+				};
+			}
+		} else if (shape == Shape.J) {
+			switch (rotation) {
+				case 0 -> gridShape = new byte[][] {
+					{0, 0, 1, 0},
+					{0, 0, 1, 0},
+					{0, 1, 1, 0},
+					{0, 0, 0, 0}
+				};
+				case 1 -> gridShape = new byte[][] {
+					{0, 1, 0, 0},
+					{0, 1, 1, 1},
+					{0, 0, 0, 0},
+					{0, 0, 0, 0}
+				};
+				case 2 -> gridShape = new byte[][] {
+					{0, 0, 1, 1},
+					{0, 0, 1, 0},
+					{0, 0, 1, 0},
+					{0, 0, 0, 0}
+				};
+				case 3 -> gridShape = new byte[][] {
+					{0, 0, 0, 0},
+					{0, 1, 1, 1},
+					{0, 0, 0, 1},
+					{0, 0, 0, 0}
+				};
+			}
+		} else if (shape == Shape.S) {
+			switch (rotation) {
+				case 0 -> gridShape = new byte[][] {
+					{0, 1, 0, 0},
+					{0, 1, 1, 0},
+					{0, 0, 1, 0},
+					{0, 0, 0, 0}
+				};
+				case 1 -> gridShape = new byte[][] {
+					{0, 0, 0, 0},
+					{0, 0, 1, 1},
+					{0, 1, 1, 0},
+					{0, 0, 0, 0}
+				};
+			}
+		} else if (shape == Shape.Z) {
+			switch (rotation) {
+				case 0 -> gridShape = new byte[][] {
+					{0, 0, 0, 1},
+					{0, 0, 1, 1},
+					{0, 0, 1, 0},
+					{0, 0, 0, 0}
+				};
+				case 1 -> gridShape = new byte[][] {
+					{0, 0, 0, 0},
+					{0, 1, 1, 0},
+					{0, 0, 1, 1},
+					{0, 0, 0, 0}
+				};
+			}
 		}
 	}
 

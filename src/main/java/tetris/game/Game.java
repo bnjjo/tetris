@@ -29,8 +29,8 @@ public class Game {
 	public Game() throws IOException {
 		grid = new GameGrid();
 		terminal = TerminalBuilder.builder().build();
-		originalAttrs = terminal.getAttributes();
 		rng = new Random();
+		originalAttrs = terminal.getAttributes();
 
 		currentPiece = new Piece(rng.nextInt(Piece.Shape.values().length));
 	}
@@ -68,8 +68,7 @@ public class Game {
 		// spawns new thread for polling
 		InputHandler inputH = new InputHandler(terminal, running);
 
-		// 1 tick per second 
-		double baseTickRate = 1_000_000_000;
+		double baseTickRate = 800_000_000;
 		double delta = 0;
 		long lastTime = System.nanoTime();
 		long currentTime;
@@ -78,12 +77,30 @@ public class Game {
 		final long FPS = 1000 / 60; // 1,000ms/60
 
 		try {
+			update();
+
 			draw();
 
 			update();
 
 			while (running.get()) {
 				if (inputH.exited) running.set(false);
+
+				if (inputH.upPressed) {
+					inputH.keyUp();
+					currentPiece.rotate(false);
+
+					if (!grid.isCollidingWithWall(currentPiece)) {
+						grid.updateGrid(currentPiece);
+
+						draw();
+					} else {
+						currentPiece.rotate(true);
+						grid.updateGrid(currentPiece);
+
+						draw();
+					}
+				}
 
 				if (inputH.leftPressed) {
 					inputH.keyUp();
@@ -117,11 +134,19 @@ public class Game {
 					}
 				}
 
-				if (currentPiece.landed) dropNewPiece();
+				if (currentPiece.landed) {
+					dropNewPiece();
+					grid.checkForBarClears();
+
+					if (grid.gameOver) {
+						System.out.println("GAME OVER!");
+						running.set(false);
+					}
+				}
 
 				currentTime = System.nanoTime();
-				// speeds up to 10 ticks per second/100ms pause after each tick
-				double tickRate = (inputH.downPressed ? 100_000_000 : baseTickRate);
+				// speeds up to 20 ticks per second/50ms pause after each tick
+				double tickRate = (inputH.downPressed ? 50_000_000 : baseTickRate);
 				delta += (currentTime - lastTime) / tickRate;
 				lastTime = currentTime;
 
@@ -173,7 +198,9 @@ public class Game {
 	public void dropNewPiece() {
 		grid.saveGrid();
 		currentPiece = new Piece(rng.nextInt(Piece.Shape.values().length));
+		draw();
 	}
+
 
 	private void clearScreen() {
 		terminal.puts(Capability.clear_screen);

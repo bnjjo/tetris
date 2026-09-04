@@ -3,6 +3,8 @@ package tetris.game;
 import org.jline.terminal.Terminal;
 
 public class GameGrid {
+	public boolean gameOver = false;
+
 	private int[][] baseGrid = new int[][] {
 		{1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
 		{1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
@@ -75,6 +77,41 @@ public class GameGrid {
 		}
 
 		return false;
+	}
+
+	public void checkForBarClears() {
+		int towerHeight = 0;
+
+		for (int i = ROWS;; --i) {
+			if (i < 0) {
+				gameOver = true;
+				return;
+			}
+
+			int sum = 0;
+			boolean clearedBarPresent = true;
+
+			for (int j = START_COL; j < COLS + START_COL; ++j) {
+				sum += currentGrid[i][j];
+				if (currentGrid[i][j] < 1) clearedBarPresent = false;
+			}
+
+			if (sum == 0) { towerHeight = ROWS - i; break; }
+			if (clearedBarPresent) {
+				for (int k = i; k > START_ROW; --k) {
+					for (int l = START_COL; l < COLS + START_COL; ++l) {
+						currentGrid[k][l] = currentGrid[k - 1][l];
+						currentGrid[k - 1][l] = 0;
+					}
+				}
+
+				i = ROWS + 1;
+			}
+		}
+
+		saveGrid();
+
+		System.out.println(towerHeight);
 	}
 
 	private void resetGrid() {

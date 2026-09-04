@@ -11,7 +11,7 @@ import org.jline.utils.NonBlockingReader;
 
 public class InputHandler {
 
-	public boolean downPressed, leftPressed, rightPressed, exited;
+	public boolean upPressed, downPressed, leftPressed, rightPressed, exited;
 
 	private ExecutorService executor;
 
@@ -25,6 +25,7 @@ public class InputHandler {
 					int c = reader.read(100); // read every 100ms
 					if (c > 0) {
 						switch (c) {
+							case 'w' -> upPressed    = true;
 							case 's' -> downPressed  = true;
 							case 'a' -> leftPressed  = true;
 							case 'd' -> rightPressed = true;
@@ -48,6 +49,7 @@ public class InputHandler {
 	}
 
 	public void keyUp() {
+		upPressed    = false;
 		downPressed  = false;
 		leftPressed  = false;
 		rightPressed = false;
