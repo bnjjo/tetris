@@ -47,7 +47,18 @@ public class GameGrid {
 	public void drawGrid(Terminal terminal) {
 		for (int i = START_ROW; i < ROWS + START_ROW; ++i) {
 			for (int j = START_COL; j < COLS + START_COL; ++j) {
-				if (currentGrid[i][j] == 1) terminal.writer().printf("███", currentGrid[i][j]);
+				if (currentGrid[i][j] > 0) {
+					switch (currentGrid[i][j]) {
+						case 2 -> terminal.writer().printf("\033[33m███\033[0m", currentGrid[i][j]);
+						case 3 -> terminal.writer().printf("\033[31m███\033[0m", currentGrid[i][j]);
+						case 4 -> terminal.writer().printf("\033[35m███\033[0m", currentGrid[i][j]);
+						case 5 -> terminal.writer().printf("\033[37m███\033[0m", currentGrid[i][j]);
+						case 6 -> terminal.writer().printf("\033[36m███\033[0m", currentGrid[i][j]);
+						case 7 -> terminal.writer().printf("\033[34m███\033[0m", currentGrid[i][j]);
+						case 8 -> terminal.writer().printf("\033[32m███\033[0m", currentGrid[i][j]);
+						default -> terminal.writer().printf("███", currentGrid[i][j]);
+					}
+				}
 				else terminal.writer().printf("░░░", currentGrid[i][j]);
 			}
 			terminal.writer().println();
@@ -58,9 +69,12 @@ public class GameGrid {
 	public void updateGrid(Piece p) {
 		resetGrid();
 
-		for (int i = p.currentRow; i < p.currentRow + 4; ++i) {
-			for (int j = p.currentCol; j < p.currentCol + 4; ++j) {
-				currentGrid[i][j] = p.gridShape[i - p.currentRow][j - p.currentCol] | currentGrid[i][j];
+		for (int i = p.currentRow; i < p.currentRow + Piece.GRID_SIZE; ++i) {
+			for (int j = p.currentCol; j < p.currentCol + Piece.GRID_SIZE; ++j) {
+				int pieceVal = p.gridShape[i - p.currentRow][j - p.currentCol];
+				int gridVal = currentGrid[i][j];
+
+				if (pieceVal + gridVal == pieceVal) currentGrid[i][j] = pieceVal;
 			}
 		}
 	}
@@ -68,11 +82,12 @@ public class GameGrid {
 	public boolean isCollidingWithWall(Piece p) {
 		resetGrid();
 
-		for (int i = p.currentRow; i < p.currentRow + 4; ++i) {
-			for (int j = p.currentCol; j < p.currentCol + 4; ++j) {
-				if (p.gridShape[i - p.currentRow][j - p.currentCol] + currentGrid[i][j] > 1) {
-					return true;
-				}
+		for (int i = p.currentRow; i < p.currentRow + Piece.GRID_SIZE; ++i) {
+			for (int j = p.currentCol; j < p.currentCol + Piece.GRID_SIZE; ++j) {
+				int pieceVal = p.gridShape[i - p.currentRow][j - p.currentCol];
+				int gridVal = currentGrid[i][j];
+
+				if (pieceVal > 0 && gridVal > 0) return true;
 			}
 		}
 

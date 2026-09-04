@@ -32,7 +32,8 @@ public class Game {
 		rng = new Random();
 		originalAttrs = terminal.getAttributes();
 
-		currentPiece = new Piece(rng.nextInt(Piece.Shape.values().length));
+		// currentPiece = new Piece(rng.nextInt(Piece.Shape.values().length));
+		currentPiece = new Piece(1);
 	}
 
 	public void initGame() throws IOException {
@@ -77,8 +78,6 @@ public class Game {
 		final long FPS = 1000 / 60; // 1,000ms/60
 
 		try {
-			update();
-
 			draw();
 
 			update();
@@ -200,7 +199,6 @@ public class Game {
 		currentPiece = new Piece(rng.nextInt(Piece.Shape.values().length));
 		draw();
 	}
-
 
 	private void clearScreen() {
 		terminal.puts(Capability.clear_screen);

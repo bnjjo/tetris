@@ -10,7 +10,6 @@ import org.jline.terminal.Terminal;
 import org.jline.utils.NonBlockingReader;
 
 public class InputHandler {
-
 	public boolean upPressed, downPressed, leftPressed, rightPressed, exited;
 
 	private ExecutorService executor;
@@ -30,7 +29,6 @@ public class InputHandler {
 							case 'a' -> leftPressed  = true;
 							case 'd' -> rightPressed = true;
 
-							// EXITING
 							case 'q'      -> exited = true;
 							case '\u0003' -> exited = true; // \u0003 - ctrl+c
 							case '\u0004' -> exited = true; // \u0004 - ctrl+d
