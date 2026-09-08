@@ -49,17 +49,17 @@ public class GameGrid {
 			for (int j = START_COL; j < COLS + START_COL; ++j) {
 				if (currentGrid[i][j] > 0) {
 					switch (currentGrid[i][j]) {
-						case 2 -> terminal.writer().printf("\033[33m███\033[0m", currentGrid[i][j]);
-						case 3 -> terminal.writer().printf("\033[31m███\033[0m", currentGrid[i][j]);
-						case 4 -> terminal.writer().printf("\033[35m███\033[0m", currentGrid[i][j]);
-						case 5 -> terminal.writer().printf("\033[37m███\033[0m", currentGrid[i][j]);
-						case 6 -> terminal.writer().printf("\033[36m███\033[0m", currentGrid[i][j]);
-						case 7 -> terminal.writer().printf("\033[34m███\033[0m", currentGrid[i][j]);
-						case 8 -> terminal.writer().printf("\033[32m███\033[0m", currentGrid[i][j]);
-						default -> terminal.writer().printf("███", currentGrid[i][j]);
+						case 2 -> terminal.writer().print("\033[33m███\033[0m");
+						case 3 -> terminal.writer().print("\033[31m███\033[0m");
+						case 4 -> terminal.writer().print("\033[35m███\033[0m");
+						case 5 -> terminal.writer().print("\033[37m███\033[0m");
+						case 6 -> terminal.writer().print("\033[36m███\033[0m");
+						case 7 -> terminal.writer().print("\033[34m███\033[0m");
+						case 8 -> terminal.writer().print("\033[32m███\033[0m");
+						default -> terminal.writer().print("███");
 					}
 				}
-				else terminal.writer().printf("░░░", currentGrid[i][j]);
+				else terminal.writer().print("░░░");
 			}
 			terminal.writer().println();
 		}
